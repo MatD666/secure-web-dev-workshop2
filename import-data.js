@@ -13,7 +13,7 @@ const filmLocationShema = new Schema({
     filmName: String,
     district: String,
     geolocation:{coordinates:[Number],
-                    type: String
+                    type: {type:String}
                 },
     sourceLocationId: String,
     filmDirectorName: String,
@@ -30,24 +30,25 @@ async function main () {
     console.log(result);
     //const maPremiereLocation = new Locations({filmType:'Horror'});
     //await maPremiereLocation.save();
-    for(X in filmingLocations){
+    for(const filmingLocation of filmingLocations){
         const Local = new Locations({
-            filmType: filmingLocations[X].fields.nom_tournage,
-            filmProducerName: filmingLocations[X].fields.nom_tournage,
-            endDate:   Date,
-            filmName: filmingLocations[X].fields.nom_tournage,
-            district: filmingLocations[X].fields.nom_tournage,
-            geolocation:{coordinates:[Number],
-                type: String
+            filmType: filmingLocation.fields.type_tournage,
+            filmProducerName: filmingLocation.fields.nom_producteur,
+            endDate:   filmingLocation.fields.date_fin,
+            filmName: filmingLocation.fields.nom_tournage,
+            district: filmingLocation.fields.ardt_lieu,
+            geolocation:{coordinates:filmingLocation.fields.geo_shape.coordinates,
+                type: filmingLocation.fields.geo_shape.type,
             },
-            sourceLocationId: String,
-            filmDirectorName: String,
-            address: String,
-            startDate: Date,
-            year: Number,
+            sourceLocationId: filmingLocation.fields.id_lieu,
+            filmDirectorName: filmingLocation.fields.nom_realisateur,
+            address: filmingLocation.fields.adresse_lieu,
+            startDate: filmingLocation.fields.date_debut,
+            year: filmingLocation.fields.annee_tournage,
         })
+        await Local.save();
     }
-    console.log('I am finish ♥')
+    console.log(' ♥♥♥ ◄ I am finish ► ♥♥♥ ')
 }
 
 main();
